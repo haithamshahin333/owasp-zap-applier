@@ -1,0 +1,6 @@
+SOURCE_REPOSITORY_URL=https://github.com/haithamshahin333/containers-quickstarts.git
+BUILDER_IMAGE_NAME=centos:centos7
+NAME=zap-app
+SOURCE_REPOSITORY_REF=Issue-138_-_Fix_unmapped_UID_for_ZAP
+SOURCE_CONTEXT_DIR=/jenkins-slaves/jenkins-slave-zap
+DOCKERFILE_PATH=Dockerfile

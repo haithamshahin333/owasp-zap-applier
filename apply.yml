@@ -1,0 +1,8 @@
+---
+- name: Deploy Owasp Zap
+  hosts: app
+  vars:
+    test_namespace: testing-zap
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier

@@ -1,0 +1,18 @@
+---
+openshift_cluster_content:
+- object: build
+  content:
+  - name: zap-app-build
+    template: "{{ playbook_dir }}/openshift-templates/build.yml"
+    params: "{{ playbook_dir }}/params/build"
+    namespace: "{{ test_namespace }}"
+    tags:
+    - build
+- object: deploy
+  content:
+  - name: hello-world-app-dev-deploy
+    template: "{{ playbook_dir }}/openshift-templates/deployment.yml"
+    params: "{{ playbook_dir }}/params/deploy"
+    namespace: "{{ test_namespace }}"
+    tags:
+    - deploy

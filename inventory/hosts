@@ -1,0 +1,2 @@
+[app]
+zap-app ansible_connection=local

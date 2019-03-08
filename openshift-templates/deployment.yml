@@ -1,0 +1,121 @@
+---
+apiVersion: v1
+kind: Template
+labels:
+  template: zap-app-template
+message: A zap container has been created in your project.
+metadata:
+  annotations:
+    iconClass: icon-openshift
+    description: ${NAME}
+    tags: instant-app
+  name: "zap-app"
+objects:
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: ${NAME}
+    labels:
+      app: ${NAME}
+  spec:
+    wildcardPolicy: None
+    to:
+      kind: Service
+      name: ${NAME}
+      weight: 100
+    port:
+      targetPort: 8080-tcp
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${NAME}
+    labels:
+      app: ${NAME}
+  spec:
+    ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      app: ${NAME}
+      deploymentConfig: ${NAME}
+    type: ClusterIP
+    sessionAffinity: None
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${NAME}
+    labels:
+      app: ${NAME}
+  spec:
+    replicas: 1
+    selector:
+      app: ${NAME}
+      deploymentConfig: ${NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: ${NAME}
+          deploymentConfig: ${NAME}
+      spec:
+        containers:
+        - name: ${NAME}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              memory: ${MEMORY_LIMIT}
+            requests:
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /JSON/core/view/mode/
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /JSON/core/view/mode/
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}
+        from:
+          kind: ImageStreamTag
+          name: ${ZAP_IMAGE_STREAM_TAG}
+    - type: ConfigChange
+parameters:
+- description: The name of the OpenShift Service exposed for the Zap container.
+  displayName: Zap App Name
+  name: NAME
+  value: zap-app
+- description: Name of the ImageStreamTag to be used for the Zap image.
+  displayName: Zap ImageStreamTag
+  name: ZAP_IMAGE_STREAM_TAG
+  value: zap-app:latest
+- description: The memory limit for the Zap container.
+  displayName: Zap Memory Limit
+  name: MEMORY_LIMIT
+  value: 2Gi
