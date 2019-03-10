@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: zap-app-template
+  template: zap-template
 message: A zap container has been created in your project.
 metadata:
   annotations:
     iconClass: icon-openshift
     description: ${NAME}
     tags: instant-app
-  name: "zap-app"
+  name: ${NAME}
 objects:
 - apiVersion: v1
   kind: Route
