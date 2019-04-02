@@ -59,17 +59,12 @@ objects:
               memory: 512Mi
           terminationMessagePath: /dev/termination-log
           imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: /JSON/core/view/mode/
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 5
           readinessProbe:
-            httpGet:
-              path: /JSON/core/view/mode/
-              port: 8080
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - curl http://localhost:8080/JSON/core/view/mode/
             initialDelaySeconds: 10
             periodSeconds: 5
             timeoutSeconds: 5
