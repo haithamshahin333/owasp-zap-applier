@@ -60,25 +60,19 @@ objects:
           terminationMessagePath: /dev/termination-log
           imagePullPolicy: IfNotPresent
           livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /JSON/core/view/mode/
-              port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 45
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          readinessProbe:
-            failureThreshold: 3
             httpGet:
               path: /JSON/core/view/mode/
               port: 8080
               scheme: HTTP
             initialDelaySeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /JSON/core/view/mode/
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
         restartPolicy: Always
         terminationGracePeriodSeconds: 30
         dnsPolicy: ClusterFirst
