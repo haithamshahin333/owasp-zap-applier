@@ -63,16 +63,16 @@ objects:
             httpGet:
               path: /JSON/core/view/mode/
               port: 8080
-              scheme: HTTP
             initialDelaySeconds: 10
             periodSeconds: 5
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /JSON/core/view/mode/
               port: 8080
-              scheme: HTTP
             initialDelaySeconds: 10
             periodSeconds: 5
+            timeoutSeconds: 5
         restartPolicy: Always
         terminationGracePeriodSeconds: 30
         dnsPolicy: ClusterFirst
